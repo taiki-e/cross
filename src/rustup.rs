@@ -56,8 +56,10 @@ pub fn available_targets(toolchain: &str, verbose: bool) -> Result<AvailableTarg
 }
 
 pub fn install_toolchain(toolchain: &str, verbose: bool) -> Result<()> {
+    // In Github Actions and Azure Pipelines, --no-self-update is necessary
+    // because the windows environment cannot self-update rustup.exe.
     Command::new("rustup")
-        .args(&["toolchain", "add", toolchain])
+        .args(&["toolchain", "add", toolchain, "--no-self-update"])
         .run(verbose)
         .chain_err(|| format!("couldn't install toolchain `{}`", toolchain))
 }
